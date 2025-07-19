@@ -1,0 +1,113 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+.category .card p{
+    line-height: 19.2px;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    overflow: hidden;
+    flex-grow: unset;
+    height: 38px;
+}
+
+.category .card h2{
+  line-height: 25px;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    overflow: hidden;
+    flex-grow: unset;
+    height: 50px;
+}
+
+.swiper-button-prev ,.swiper-button-next {
+  background-color: #171717;
+  color: #fff !important;
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 50%;
+}
+.swiper-button-prev::after ,.swiper-button-next::after {
+  font-size: 18px !important;
+}
+.rc-slider-track, .rc-slider-tracks {
+  background-color: #171717 !important;
+}
+.rc-slider-handle{
+  border-color: #171717 !important;
+}
+.swiper-backface-hidden .swiper-slide img{
+  max-height: 550px;
+}
+.swiper-container {
+  display: flex;
+}
+.thumbs-swiper {
+  width: 25%;
+}
+.main-swiper {
+  width: 70%;
+}
+.thumbs-swiper .swiper-wrapper {
+  flex-direction: column;
+}
+.thumbs-swiper .swiper-slide {
+  height: 150px;
+  width: 150px !important;
+  margin: 10px;
+}
+.swiper-thumbs img {
+  height: 150px !important;
+  object-fit: contain;
+}
+.add-to-cart {
+  position: absolute;
+    left: 10px;
+    top: 20px;
+    padding: 6px;
+}
+.position-relative{
+  position: relative;
+  padding: 10px 30px;
+}
+.join {
+  gap: 20px
+}
+.join .join-item{
+  background: #fff;
+    color: #171717;
+    border-radius: 5px;
+}
+.join .join-item.btn-active{
+      border-radius: 5px;
+      color: #fff;
+    background: #171717;
+
+}
