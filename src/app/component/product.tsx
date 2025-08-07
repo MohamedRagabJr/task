@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useCart } from '../store';
-import { Product } from '../../types';
+import { useCart } from "../store";
+import { Product } from "../../types";
 
 export default function ProductList() {
   const [activePage, setActivePage] = useState<number>(1);
   const [productData, setProductData] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   const productsPerPage = 9;
   const addCart = useCart((state) => state.addCart);
 
@@ -18,26 +18,29 @@ export default function ProductList() {
       try {
         setLoading(true);
         setError(null);
-        
-        const response = await fetch('https://fakestoreapi.com/products');
-        
+
+        const response = await fetch(
+          "https://api.escuelajs.co/api/v1/products"
+        );
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const data: Product[] = await response.json();
         setProductData(data);
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+        const errorMessage =
+          err instanceof Error ? err.message : "Unknown error occurred";
         setError(errorMessage);
-        console.error('Error fetching products:', err);
+        console.error("Error fetching products:", err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchProducts();
-  }, []); 
+  }, []);
 
   if (loading) {
     return (
@@ -70,7 +73,7 @@ export default function ProductList() {
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-x-10 w-full">
+      <div className="grid grid-cols-4 gap-x-10 w-full">
         {currentProducts.length > 0 ? (
           currentProducts.map((product) => (
             <div
@@ -78,14 +81,18 @@ export default function ProductList() {
               key={product.id}
             >
               <img
-                src={product.image}
+                src={product.category.image}
                 alt={product.title}
                 height={300}
-                className="w-full h-48 object-contain"
+                className="w-full object-contain"
               />
               <div className="p-4">
-                <h2 className="text-lg font-bold mb-2 line-clamp-1">{product.title}</h2>
-                <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.description}</p>
+                <h2 className="text-lg font-bold mb-2 line-clamp-1">
+                  {product.title}
+                </h2>
+                <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                  {product.description}
+                </p>
                 <div className="flex justify-between items-center">
                   <span className="text-green-600 font-semibold">
                     ${product.price.toFixed(2)}
@@ -114,7 +121,9 @@ export default function ProductList() {
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
             <button
               key={page}
-              className={`join-item btn ${activePage === page ? 'btn-active' : ''}`}
+              className={`join-item btn ${
+                activePage === page ? "btn-active" : ""
+              }`}
               onClick={() => setActivePage(page)}
             >
               {page}

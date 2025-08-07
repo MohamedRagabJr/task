@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Slider from 'rc-slider';
+import Slider from "rc-slider";
 import Link from "next/link";
-import 'rc-slider/assets/index.css';
+import "rc-slider/assets/index.css";
 import Breadcrumb from "../component/breadcrumb";
-import { useCart } from '../store';
+import { useCart } from "../store";
 import { LuLayoutGrid } from "react-icons/lu";
 import { RiLayoutGrid2Fill } from "react-icons/ri";
-import { Product, BreadcrumbItem } from '../../types';
+import { Product, BreadcrumbItem } from "../../types";
 
 type GridLayout = 2 | 3;
 type PriceRange = [number, number];
@@ -29,26 +29,29 @@ export default function ProductFilter() {
       try {
         setLoading(true);
         setError(null);
-        
-        const response = await fetch('https://fakestoreapi.com/products');
-        
+
+        const response = await fetch(
+          "https://api.escuelajs.co/api/v1/products"
+        );
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const data: Product[] = await response.json();
         setProductData(data);
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+        const errorMessage =
+          err instanceof Error ? err.message : "Unknown error occurred";
         setError(errorMessage);
-        console.error('Error fetching products:', err);
+        console.error("Error fetching products:", err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchProducts();
-  }, []); 
+  }, []);
 
   if (loading) {
     return (
@@ -66,10 +69,12 @@ export default function ProductFilter() {
     );
   }
 
-  const maxPrice = Math.max(...productData.map(p => Number(p.price)), 100);
+  const maxPrice = Math.max(...productData.map((p) => Number(p.price)), 100);
 
   const filteredProducts = productData.filter(
-    product => Number(product.price) >= priceRange[0] && Number(product.price) <= priceRange[1]
+    (product) =>
+      Number(product.price) >= priceRange[0] &&
+      Number(product.price) <= priceRange[1]
   );
 
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
@@ -81,7 +86,7 @@ export default function ProductFilter() {
   const handleSliderChange = (value: number | number[]): void => {
     if (Array.isArray(value) && value.length === 2) {
       setPriceRange([value[0], value[1]]);
-      setActivePage(1); 
+      setActivePage(1);
     }
   };
 
@@ -93,8 +98,8 @@ export default function ProductFilter() {
   };
 
   const breadcrumbItems: BreadcrumbItem[] = [
-    { label: 'Home', link: '/' },
-    { label: 'Product List' },
+    { label: "Home", link: "/" },
+    { label: "Product List" },
   ];
 
   return (
@@ -102,15 +107,23 @@ export default function ProductFilter() {
       <div className="flex justify-between">
         <Breadcrumb items={breadcrumbItems} />
         <div className="icons flex mb-5 px-8 py-8 gap-4 items-center">
-          <button 
-            className={`p-2 rounded-sm ${activeGrid === 2 ? "cursor-not-allowed pointer-events-none bg-gray-300" : ""}`} 
+          <button
+            className={`p-2 rounded-sm ${
+              activeGrid === 2
+                ? "cursor-not-allowed pointer-events-none bg-gray-300"
+                : ""
+            }`}
             onClick={() => setActiveGrid(2)}
             disabled={activeGrid === 2}
           >
             <LuLayoutGrid />
           </button>
-          <button 
-            className={`p-2 rounded-sm ${activeGrid === 3 ? "cursor-not-allowed pointer-events-none bg-gray-300" : ""}`} 
+          <button
+            className={`p-2 rounded-sm ${
+              activeGrid === 3
+                ? "cursor-not-allowed pointer-events-none bg-gray-300"
+                : ""
+            }`}
             onClick={() => setActiveGrid(3)}
             disabled={activeGrid === 3}
           >
@@ -118,7 +131,7 @@ export default function ProductFilter() {
           </button>
         </div>
       </div>
-        
+
       <div className="flex w-full gap-x-4">
         <div className="w-1/4">
           <div className="w-full max-w-2xl mb-8 bg-white p-6 rounded-lg shadow-md">
@@ -131,10 +144,10 @@ export default function ProductFilter() {
                 value={priceRange}
                 onChange={handleSliderChange}
                 allowCross={false}
-                trackStyle={[{ backgroundColor: '#3b82f6' }]}
+                trackStyle={[{ backgroundColor: "#3b82f6" }]}
                 handleStyle={[
-                  { borderColor: '#3b82f6', backgroundColor: '#fff' },
-                  { borderColor: '#3b82f6', backgroundColor: '#fff' }
+                  { borderColor: "#3b82f6", backgroundColor: "#fff" },
+                  { borderColor: "#3b82f6", backgroundColor: "#fff" },
                 ]}
               />
             </div>
@@ -148,7 +161,11 @@ export default function ProductFilter() {
           </div>
         </div>
         <div className="w-3/4">
-          <div className={`grid gap-x-10 w-full ${activeGrid === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
+          <div
+            className={`grid gap-x-10 w-full ${
+              activeGrid === 2 ? "grid-cols-2" : "grid-cols-3"
+            }`}
+          >
             {currentProducts.length > 0 ? (
               currentProducts.map((product) => (
                 <div
@@ -156,14 +173,18 @@ export default function ProductFilter() {
                   key={product.id}
                 >
                   <img
-                    src={product.image}
+                    src={product.category.image}
                     alt={product.title}
                     height={300}
-                    className="w-full h-48 object-contain"
+                    className="w-full  object-contain"
                   />
                   <div className="p-4">
-                    <h2 className="text-lg font-bold mb-2 line-clamp-1">{product.title}</h2>
-                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.description}</p>
+                    <h2 className="text-lg font-bold mb-2 line-clamp-1">
+                      {product.title}
+                    </h2>
+                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                      {product.description}
+                    </p>
                     <div className="flex justify-between items-center">
                       <span className="text-green-600 font-semibold">
                         ${product.price.toFixed(2)}
@@ -185,21 +206,27 @@ export default function ProductFilter() {
               ))
             ) : (
               <div className="text-center py-8 w-full">
-                <p className="text-gray-500">No products found in this price range</p>
+                <p className="text-gray-500">
+                  No products found in this price range
+                </p>
               </div>
             )}
           </div>
           {totalPages > 1 && (
             <div className="join mt-8 w-full justify-center">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  className={`join-item btn ${activePage === page ? 'btn-active' : ''}`}
-                  onClick={() => setActivePage(page)}
-                >
-                  {page}
-                </button>
-              ))}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <button
+                    key={page}
+                    className={`join-item btn ${
+                      activePage === page ? "btn-active" : ""
+                    }`}
+                    onClick={() => setActivePage(page)}
+                  >
+                    {page}
+                  </button>
+                )
+              )}
             </div>
           )}
         </div>

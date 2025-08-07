@@ -5,7 +5,7 @@ import Swipper from "@/app/component/swipper";
 import Breadcrumb from "@/app/component/breadcrumb";
 import { useCart } from "@/app/store";
 import { useParams } from "next/navigation";
-import { Product, BreadcrumbItem } from '../../../types';
+import { Product, BreadcrumbItem } from "../../../types";
 
 export default function ProductDetails() {
   const [product, setProduct] = useState<Product | null>(null);
@@ -20,19 +20,22 @@ export default function ProductDetails() {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await fetch(`https://fakestoreapi.com/products/${id}`);
-      
+
+      const response = await fetch(
+        `https://api.escuelajs.co/api/v1/products/${id}`
+      );
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data: Product = await response.json();
       setProduct(data);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      const errorMessage =
+        err instanceof Error ? err.message : "Unknown error occurred";
       setError(errorMessage);
-      console.error('Error fetching product:', err);
+      console.error("Error fetching product:", err);
     } finally {
       setLoading(false);
     }
@@ -73,7 +76,7 @@ export default function ProductDetails() {
         <div className="text-red-500 text-lg mb-4">
           Error loading product: {error}
         </div>
-        <button 
+        <button
           onClick={handleRefresh}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
@@ -92,8 +95,8 @@ export default function ProductDetails() {
   }
 
   const breadcrumbItems: BreadcrumbItem[] = [
-    { label: 'Home', link: '/' },
-    { label: 'Products', link: '/products' },
+    { label: "Home", link: "/" },
+    { label: "Products", link: "/products" },
     { label: product.title },
   ];
 
@@ -102,12 +105,18 @@ export default function ProductDetails() {
       <Breadcrumb items={breadcrumbItems} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="left-side">
-          <Swipper productImages={[product.image , product.image ,product.image]} />
+          <Swipper
+            productImages={[
+              product.category.image,
+              product.category.image,
+              product.category.image,
+            ]}
+          />
         </div>
         <div className="right-side p-4">
           <h1 className="text-4xl font-bold mb-4">{product.title}</h1>
           <p className="text-gray-700 mb-6">{product.description}</p>
-          
+
           <div className="mb-6">
             <span className="text-3xl font-bold text-green-600">
               ${product.price.toFixed(2)}

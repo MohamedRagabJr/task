@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
-import JQueryInitializer from "./component/JQueryInitializer";
-import Nav from "./component/nav";
-import { Toaster } from "sonner"
+import { Toaster } from "sonner";
+import Navbar from "./component/navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
@@ -27,9 +21,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body cz-shortcut-listen="true">
-        <Nav />
-        <JQueryInitializer />
+      <body className={geistSans.variable} cz-shortcut-listen="true">
+        <Navbar />
         {children}
         <Toaster />
       </body>
