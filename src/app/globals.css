@@ -26,10 +26,7 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
-button {
-  background-color: var(--foreground) !important;
-  color: #fff;
-}
+
 .category .card p {
   line-height: 19.2px;
   -webkit-line-clamp: 2;
@@ -79,6 +76,7 @@ button {
 }
 .thumbs-swiper {
   width: 25%;
+  order: -1;
 }
 .main-swiper {
   width: 70%;
@@ -96,10 +94,6 @@ button {
   object-fit: contain;
 }
 .add-to-cart {
-  position: absolute;
-  left: 10px;
-  top: 20px;
-  padding: 6px;
   background-color: var(--main-color) !important;
 }
 .position-relative {
@@ -110,7 +104,7 @@ button {
   gap: 20px;
 }
 .join .join-item {
-  background: #fff;
+  background: #fff !important;
   color: var(--foreground);
   border-radius: 5px;
 }
@@ -125,4 +119,22 @@ button {
 }
 .card-title {
   color: var(--color-primary);
+}
+.main-color {
+  color: var(--foreground);
+}
+
+.main-bg {
+  background: var(--foreground) !important;
+}
+button.main-bg {
+  border-color: var(--foreground) !important;
+}
+.main-bg-100 {
+  background: rgb(68 92 75 / 10%) !important;
+}
+.menu :where(li) > :not(ul, .menu-title, details, .btn):active,
+.menu :where(li) > :not(ul, .menu-title, details, .btn).menu-active,
+.menu :where(li) > details > summary:active {
+  background-color: var(--foreground) !important;
 }

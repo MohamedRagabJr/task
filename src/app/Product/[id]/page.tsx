@@ -78,7 +78,7 @@ export default function ProductDetails() {
         </div>
         <button
           onClick={handleRefresh}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="px-4 py-2 main-bg text-white rounded hover:bg-blue-600"
         >
           Try Again
         </button>
@@ -102,7 +102,10 @@ export default function ProductDetails() {
 
   return (
     <div className="container">
-      <Breadcrumb items={breadcrumbItems} />
+      <div className="main-bg-100 mb-10 m-4">
+        <Breadcrumb items={breadcrumbItems} />
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="left-side">
           <Swipper
@@ -126,7 +129,7 @@ export default function ProductDetails() {
           <div className="flex gap-4 mb-8">
             <button
               onClick={handleAddToCart}
-              className="bg-neutral-800 text-neutral-100 px-4 py-2 rounded hover:bg-neutral-700 transition-colors"
+              className="bg-neutral-800 text-neutral-100 add-to-cart px-4 py-2 rounded hover:bg-neutral-700 transition-colors"
             >
               Add to Cart
             </button>

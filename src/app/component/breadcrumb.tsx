@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import Link from "next/link";
 
 interface BreadcrumbItem {
@@ -12,7 +12,7 @@ interface BreadcrumbProps {
 
 export default function Breadcrumb({ items }: BreadcrumbProps) {
   return (
-    <nav aria-label="breadcrumb" className='mb-5 px-8 py-8' >
+    <nav aria-label="breadcrumb" className="content-center px-8 py-8">
       <ol className="flex flex-wrap text-sm text-gray-500">
         {items.map((item, index) => (
           <li key={index} className="flex items-center">

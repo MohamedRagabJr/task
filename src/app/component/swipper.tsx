@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import type { Swiper as SwiperType } from 'swiper';
-import 'swiper/css';
-import 'swiper/css/free-mode';
-import 'swiper/css/navigation';
-import 'swiper/css/thumbs';
-import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
+import React, { useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import type { Swiper as SwiperType } from "swiper";
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
+import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 
 interface SwipperProps {
   productImages: string[];
@@ -16,11 +16,11 @@ interface SwipperProps {
   slidesPerView?: number;
 }
 
-export default function Swipper({ 
-  productImages, 
+export default function Swipper({
+  productImages,
   className = "",
   showThumbs = true,
-  slidesPerView = 4 
+  slidesPerView = 4,
 }: SwipperProps) {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
 
@@ -42,11 +42,10 @@ export default function Swipper({
 
   return (
     <div className={`swiper-container px-8 ${className}`}>
-      
       <Swiper
-        loop={productImages.length > 1} 
+        loop={productImages.length > 1}
         spaceBetween={10}
-        navigation={productImages.length > 1} 
+        navigation={productImages.length > 1}
         thumbs={shouldShowThumbs ? { swiper: thumbsSwiper } : undefined}
         modules={[FreeMode, Navigation, Thumbs]}
         className="main-swiper mb-4"
@@ -60,7 +59,7 @@ export default function Swipper({
                 className="w-full h-full object-contain"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
-                  target.src = '/placeholder-image.jpg';
+                  target.src = "/placeholder-image.jpg";
                 }}
               />
             </div>
@@ -71,9 +70,9 @@ export default function Swipper({
       {shouldShowThumbs && (
         <Swiper
           onSwiper={handleThumbsSwiper}
-          loop={false} 
+          loop={false}
           spaceBetween={10}
-          slidesPerView={Math.min(slidesPerView, productImages.length)} 
+          slidesPerView={Math.min(slidesPerView, productImages.length)}
           freeMode={true}
           watchSlidesProgress={true}
           modules={[FreeMode, Navigation, Thumbs]}
@@ -88,7 +87,7 @@ export default function Swipper({
                   className="w-full h-full object-cover rounded"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = '/placeholder-thumbnail.jpg'; 
+                    target.src = "/placeholder-thumbnail.jpg";
                   }}
                 />
               </div>
@@ -100,14 +99,14 @@ export default function Swipper({
   );
 }
 
-export function AdvancedSwipper({ 
-  productImages, 
+export function AdvancedSwipper({
+  productImages,
   className = "",
   showThumbs = true,
   slidesPerView = 4,
-  onImageChange
-}: SwipperProps & { 
-  onImageChange?: (index: number) => void 
+  onImageChange,
+}: SwipperProps & {
+  onImageChange?: (index: number) => void;
 }) {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
   const [activeIndex, setActiveIndex] = useState<number>(0);
@@ -162,7 +161,7 @@ export function AdvancedSwipper({
                 className="w-full h-full object-contain"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
-                  target.src = '/placeholder-image.jpg';
+                  target.src = "/placeholder-image.jpg";
                 }}
               />
               {/* Zoom indicator */}
@@ -174,7 +173,6 @@ export function AdvancedSwipper({
         ))}
       </Swiper>
 
-      {/* Thumbnails Swiper */}
       {shouldShowThumbs && (
         <Swiper
           onSwiper={handleThumbsSwiper}
@@ -188,11 +186,11 @@ export function AdvancedSwipper({
         >
           {productImages.map((image, index) => (
             <SwiperSlide key={`thumb-${index}`}>
-              <div 
+              <div
                 className={`aspect-square border-2 transition-colors cursor-pointer rounded overflow-hidden ${
-                  index === activeIndex 
-                    ? 'border-blue-500' 
-                    : 'border-transparent hover:border-gray-300'
+                  index === activeIndex
+                    ? "border-blue-500"
+                    : "border-transparent hover:border-gray-300"
                 }`}
               >
                 <img
@@ -201,7 +199,7 @@ export function AdvancedSwipper({
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = '/placeholder-thumbnail.jpg';
+                    target.src = "/placeholder-thumbnail.jpg";
                   }}
                 />
               </div>

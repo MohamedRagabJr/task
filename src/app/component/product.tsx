@@ -1,38 +1,42 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useCart } from "../store";
 import { Product } from "../../types";
 
+const FALLBACK_IMAGE = "https://via.placeholder.com/300?text=No+Image";
+
 export default function ProductList() {
-  const [activePage, setActivePage] = useState<number>(1);
+  const [activePage, setActivePage] = useState(1);
   const [productData, setProductData] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const productsPerPage = 9;
+  const productsPerPage = 12;
   const addCart = useCart((state) => state.addCart);
 
   useEffect(() => {
-    const fetchProducts = async (): Promise<void> => {
+    const controller = new AbortController();
+    const fetchProducts = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        const response = await fetch(
-          "https://api.escuelajs.co/api/v1/products"
-        );
+        const res = await fetch("https://api.escuelajs.co/api/v1/products", {
+          signal: controller.signal,
+        });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
         }
 
-        const data: Product[] = await response.json();
+        const data: Product[] = await res.json();
         setProductData(data);
       } catch (err) {
-        const errorMessage =
-          err instanceof Error ? err.message : "Unknown error occurred";
-        setError(errorMessage);
+        if (err instanceof DOMException && err.name === "AbortError") return; // Request aborted
+        const message = err instanceof Error ? err.message : "Unknown error";
+        setError(message);
         console.error("Error fetching products:", err);
       } finally {
         setLoading(false);
@@ -40,23 +44,8 @@ export default function ProductList() {
     };
 
     fetchProducts();
+    return () => controller.abort();
   }, []);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-lg font-semibold">Loading products...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-red-500 text-lg">Error: {error}</div>
-      </div>
-    );
-  }
 
   const totalPages = Math.ceil(productData.length / productsPerPage);
   const currentProducts = productData.slice(
@@ -64,27 +53,48 @@ export default function ProductList() {
     activePage * productsPerPage
   );
 
-  const handleAddToCart = (product: Product): void => {
-    addCart({
-      ...product,
-      quantity: 1,
-    });
+  const handleAddToCart = (product: Product) => {
+    addCart({ ...product, quantity: 1 });
   };
+
+  const handleImageError = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>
+  ) => {
+    e.currentTarget.src = FALLBACK_IMAGE;
+    e.currentTarget.onerror = null; // prevent infinite loop
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <span className="text-lg font-semibold">Loading products...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <span className="text-red-500 text-lg">Error: {error}</span>
+      </div>
+    );
+  }
 
   return (
     <>
-      <div className="grid grid-cols-4 gap-x-10 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
         {currentProducts.length > 0 ? (
           currentProducts.map((product) => (
             <div
-              className="card w-full shadow-sm rounded-lg mb-5 overflow-hidden border border-gray-100 hover:shadow-md transition-shadow"
               key={product.id}
+              className="card w-full shadow-sm rounded-lg overflow-hidden border border-gray-100 hover:shadow-md transition-shadow"
             >
               <img
-                src={product.category.image}
+                src={product.category?.image || FALLBACK_IMAGE}
                 alt={product.title}
                 height={300}
-                className="w-full object-contain"
+                className="w-full h-64 object-contain bg-gray-50"
+                onError={handleImageError}
               />
               <div className="p-4">
                 <h2 className="text-lg font-bold mb-2 line-clamp-1">
@@ -97,15 +107,19 @@ export default function ProductList() {
                   <span className="text-green-600 font-semibold">
                     ${product.price.toFixed(2)}
                   </span>
-                  <button className="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors">
-                    Buy Now
-                  </button>
-                  <button
-                    onClick={() => handleAddToCart(product)}
-                    className="bg-neutral-800 text-[0.8rem] text-neutral-100 p-1 rounded add-to-cart"
-                  >
-                    Add to Cart
-                  </button>
+                  <div className="flex gap-2">
+                    <Link href={`/Product/${product.id}`} passHref>
+                      <button className="main-bg text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors">
+                        Buy Now
+                      </button>
+                    </Link>
+                    <button
+                      onClick={() => handleAddToCart(product)}
+                      className="bg-neutral-800 text-xs add-to-cart text-neutral-100 px-2 py-1 rounded hover:bg-neutral-900 transition-colors"
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -116,15 +130,18 @@ export default function ProductList() {
           </div>
         )}
       </div>
+
       {totalPages > 1 && (
-        <div className="join mt-8 w-full justify-center">
+        <div className="flex justify-center mt-8 gap-2">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
             <button
               key={page}
-              className={`join-item btn ${
-                activePage === page ? "btn-active" : ""
-              }`}
               onClick={() => setActivePage(page)}
+              className={`px-4 py-2 rounded border ${
+                activePage === page
+                  ? "main-bg text-white border-blue-500"
+                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+              }`}
             >
               {page}
             </button>
